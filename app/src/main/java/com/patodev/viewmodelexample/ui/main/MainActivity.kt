@@ -1,7 +1,12 @@
 package com.patodev.viewmodelexample.ui.main
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import com.patodev.viewmodelexample.R
 import com.patodev.viewmodelexample.databinding.ActivityMainBinding
 import com.patodev.viewmodelexample.domain.usecases.AddNewPeople
 import com.patodev.viewmodelexample.ui.people.PeopleActivity
@@ -21,6 +26,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSuperheroes.setOnClickListener { openSuperHeroesActivity() }
         binding.btnPeople.setOnClickListener { openPeopleActivity() }
+        binding.btnChangeColor.setOnClickListener { changeColor() }
+    }
+
+    private fun changeColor() {
+        binding.layout.setBackgroundColor(ProvideColor().getRandomColor(this))
     }
 
     private fun openPeopleActivity() {
