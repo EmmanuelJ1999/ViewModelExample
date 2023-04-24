@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.patodev.viewmodelexample.R
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +29,14 @@ class MainActivity : AppCompatActivity() {
         binding.btnSuperheroes.setOnClickListener { openSuperHeroesActivity() }
         binding.btnPeople.setOnClickListener { openPeopleActivity() }
         binding.btnChangeColor.setOnClickListener { changeColor() }
+
+        viewModel.color.observe(this){
+            binding.layout.setBackgroundColor(it)
+        }
     }
 
     private fun changeColor() {
-        binding.layout.setBackgroundColor(ProvideColor().getRandomColor(this))
+        viewModel.randomColor(this)
     }
 
     private fun openPeopleActivity() {
