@@ -28,7 +28,7 @@ class PeopleInfoActivity : AppCompatActivity() {
 
     private val TAG = this::class.java
     private lateinit var binding : ActivityPeopleInfoBinding
-    @Inject lateinit var addNewPeople: AddNewPeople
+    private val viewModel by viewModels<PeopleInfoViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +50,9 @@ class PeopleInfoActivity : AppCompatActivity() {
             binding.tvAgeValue.text.toString().toInt()
         )
 
-        lifecycleScope.launch {
-            addNewPeople(people)
-            runOnUiThread{
-                Toast.makeText(this@PeopleInfoActivity, "Saved", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-        }
+        viewModel.savePeople(people)
+        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
 

@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.patodev.viewmodelexample.databinding.ActivityPeopleBinding
+import com.patodev.viewmodelexample.domain.entities.People
 import com.patodev.viewmodelexample.domain.usecases.GetPeopleAll
 import com.patodev.viewmodelexample.ui.people.info.PeopleInfoActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,24 +22,23 @@ class PeopleActivity : AppCompatActivity() {
         fun create(context: Context):Intent = Intent(context, PeopleActivity::class.java)
     }
     private lateinit var binding: ActivityPeopleBinding
-    @Inject lateinit var getPeopleAll: GetPeopleAll
+    private val viewModel by viewModels<PeopleViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPeopleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.fabAdd.setOnClickListener { openPeopleInfoActivity() }
+
+        viewModel.people.observe(this){
+            initPeopleList(it)
+        }
     }
 
-    private fun initPeopleList() {
-        lifecycleScope.launch {
-            val peopleList = getPeopleAll()
-            runOnUiThread{
-                binding.rvPeople.layoutManager = LinearLayoutManager(this@PeopleActivity)
-                binding.rvPeople.adapter = PeopleAdapter(peopleList){
+    private fun initPeopleList(peopleList: List<People>) {
+        binding.rvPeople.layoutManager = LinearLayoutManager(this)
+        binding.rvPeople.adapter = PeopleAdapter(peopleList){
 
-                }
-            }
         }
     }
 
@@ -47,7 +48,7 @@ class PeopleActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        initPeopleList()
+        viewModel.updatePeopleList()
     }
 
 }
